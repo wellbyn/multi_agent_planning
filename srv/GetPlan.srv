@@ -1,6 +1,4 @@
 string serial_id
-uint32 x
-uint32 y
-uint32 th
+geometry_msgs/Pose2D goal_postion
 ---
-string path
+geometry_msgs/Pose2D[] path
