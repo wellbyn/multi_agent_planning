@@ -1,0 +1,6 @@
+string serial_id
+uint32 x
+uint32 y
+uint32 th
+---
+string path
