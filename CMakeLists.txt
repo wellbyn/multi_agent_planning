@@ -38,6 +38,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   roscpp
   geometry_msgs
+  nav_msgs
 )
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
@@ -47,9 +48,9 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(FILES
-  Feedback.msg
-)
+# add_message_files(FILES
+#   Feedback.msg
+# )
 
 ## Generate services in the 'srv' folder
 add_service_files(FILES
@@ -68,6 +69,7 @@ add_service_files(FILES
 generate_messages(DEPENDENCIES
   std_msgs
   geometry_msgs
+  nav_msgs
 )
 
 ################################################
