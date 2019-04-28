@@ -1,0 +1,9 @@
+  <launch>
+ 
+    <node pkg="multi_agent_planning" type="planner" name="planner" output="screen"/>
+
+    <node pkg="multi_agent_planning" type="agent" name="agent" output="screen"/>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find multi_agent_planning)/rviz/multi_agent_planning.rviz" />
+
+  </launch>
