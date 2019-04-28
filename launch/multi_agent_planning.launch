@@ -1,6 +1,8 @@
   <launch>
  
-    <node pkg="multi_agent_planning" type="planner" name="planner" output="screen"/>
+    <node pkg="multi_agent_planning" type="planner" name="planner" output="screen">
+        <param name = "planner_file_path" type="string" value="$(find multi_agent_planning)/path"/>
+    </node>
 
     <node pkg="multi_agent_planning" type="agent" name="agent" output="screen">
       <param name = "agent_1/start_x" type="double" value="2.0"/>

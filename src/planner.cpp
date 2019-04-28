@@ -4,12 +4,14 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Point.h>
 #include <string>
+#include <fstream>
 #include "multi_agent_planning/GetPlan.h"
 #include "multi_agent_planning/roadmap.h"
 
 //fisrt agent path wiil be second agent obstical;
 vector<vector<int>> obstical_map(11, vector<int>(11, 0));
 
+#define NODE_NAME "planner"
 #define STEP_COST 10    //one step costs 10	
 
 class Planner
@@ -23,6 +25,7 @@ class Planner
 		vector<Node::Ptr > reconstruct_path(Node::Ptr start, Node::Ptr end, vector<vector<Node::Ptr>> came_from);
 		vector<vector<Node::Ptr>> find_path(Node::Ptr start, Node::Ptr end, vector<Node::Ptr> &map);
 		double heuristic(Node::Ptr state, Node::Ptr end);
+		void save_path(const std::string filename);
 		ros::NodeHandle nh_;
 		ros::Publisher pub_;
 		ros::Subscriber sub_;
@@ -56,6 +59,25 @@ Planner::Planner()
 	// map info
 	rm->buildMap();
 	map_size = rm->getSize();
+}
+
+
+void Planner::save_path(const std::string filename)
+{
+	std::string file_path;
+	std::string file_path_param = (std::string)NODE_NAME+"/planner_file_path";
+    
+	ros::param::get(file_path_param, file_path);
+	file_path = file_path+"/"+filename;
+
+	//ROS_INFO(file_path);
+
+    std::ofstream path_file(file_path);
+    if (path_file.is_open())
+    {
+        path_file << final_path;
+        path_file.close();
+    }
 }
 
 
@@ -109,6 +131,10 @@ bool Planner::path_callback(multi_agent_planning::GetPlan::Request &req,
 		pose.position.y = node_path[i]->y;
 		final_path.poses[i].pose = pose;
 	}
+
+    //save the planning path
+    save_path(agent_id);
+
 	// the start and goal of second agent is still accessible for
 	// second agent, need reset here.
 	obstical_map[start->x][start->y] = 0;
@@ -208,7 +234,7 @@ vector<vector<Node::Ptr>> Planner::find_path(Node::Ptr start, Node::Ptr end, vec
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "planner");
+    ros::init(argc, argv, NODE_NAME);
     Planner planner;
     ros::spin();
     return 0;
