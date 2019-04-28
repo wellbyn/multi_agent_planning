@@ -5,6 +5,8 @@
 #include "multi_agent_planning/GetPlan.h"
 #include "multi_agent_planning/common.h"
 
+#define NODE_NAME "agent"
+
 class Agent
 {
 	public:
@@ -38,18 +40,15 @@ Agent::Agent()
 
 void Agent::select_start_position(const std::string id)
 {
-    if("agent_1" == id)
-    {
-        state.x = 2.0;
-        state.y = 0.0;
-        state.theta = 0.0;
-    }
-    else if("agent_2" == id)
-    {
-        state.x = 0.0;
-        state.y = 3.0;
-        state.theta = 0.0;
-    }
+	std::string start_x_param=(std::string)NODE_NAME+"/"+id+"/start_x";
+	std::string start_y_param=(std::string)NODE_NAME+"/"+id+"/start_y";
+
+	if(ros::param::has(start_x_param)&&ros::param::has(start_y_param))
+	{
+		ros::param::get(start_x_param, state.x);
+		ros::param::get(start_y_param, state.y);
+		state.theta = 0.0;
+	}
     else
     {
         state.x = 0.0;
@@ -86,7 +85,7 @@ bool Agent::goal_callback(multi_agent_planning::UpdateGoal::Request &req,
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "agent");
+    ros::init(argc, argv, NODE_NAME);
     Agent agent;
     ros::spin();
     return 0;

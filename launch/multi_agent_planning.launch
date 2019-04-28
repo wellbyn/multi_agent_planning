@@ -2,7 +2,12 @@
  
     <node pkg="multi_agent_planning" type="planner" name="planner" output="screen"/>
 
-    <node pkg="multi_agent_planning" type="agent" name="agent" output="screen"/>
+    <node pkg="multi_agent_planning" type="agent" name="agent" output="screen">
+      <param name = "agent_1/start_x" type="double" value="2.0"/>
+      <param name = "agent_1/start_y" type="double" value="0.0"/>
+      <param name = "agent_2/start_x" type="double" value="0.0"/>
+      <param name = "agent_2/start_y" type="double" value="3.0"/>
+    </node>
 
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find multi_agent_planning)/rviz/multi_agent_planning.rviz" />
 
