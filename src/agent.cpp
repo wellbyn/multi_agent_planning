@@ -15,6 +15,8 @@ class Agent
 
 		void time_callback(const ros::TimerEvent& event);
 
+		void select_start_position(const std::string id);
+
 		ros::NodeHandle nh_;
 		ros::Publisher pub_;
 		ros::ServiceServer goal_;
@@ -34,23 +36,15 @@ Agent::Agent()
 }
 
 
-void Agent::time_callback(const ros::TimerEvent& event)
+void Agent::select_start_position(const std::string id)
 {
-	// publish the agent state
-	pub_.publish(state);
-}
-
-
-bool Agent::goal_callback(multi_agent_planning::UpdateGoal::Request &req, 
-						  multi_agent_planning::UpdateGoal::Response &res)
-{
-    if("agent_1" == req.id)
+    if("agent_1" == id)
     {
         state.x = 2.0;
         state.y = 0.0;
         state.theta = 0.0;
     }
-    else if("agent_2" == req.id)
+    else if("agent_2" == id)
     {
         state.x = 0.0;
         state.y = 3.0;
@@ -65,6 +59,20 @@ bool Agent::goal_callback(multi_agent_planning::UpdateGoal::Request &req,
 
     //Update state position first
     pub_.publish(state);
+}
+
+
+void Agent::time_callback(const ros::TimerEvent& event)
+{
+    // publish the agent state
+    pub_.publish(state);
+}
+
+
+bool Agent::goal_callback(multi_agent_planning::UpdateGoal::Request &req, 
+                          multi_agent_planning::UpdateGoal::Response &res)
+{
+    select_start_position(req.id);
 
     agent_path.request.id = req.id;
     agent_path.request.goal.x = req.goal.x;
