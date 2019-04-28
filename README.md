@@ -6,8 +6,9 @@
 ## Test Process:
 1. catkin_make
 2. source devel/setup.bash
-3. rosrun multi_agent_planning test_agent_1 to create path from (2, 0, 0) to (2, 5, 0)
-4. rosrun multi_agent_planning test_agent_2 to create path from (0, 3, 0) to (6, 3, 0)
+3. roslaunch multi_agent_planning multi_agent_planning.launch
+4. rosrun multi_agent_planning test_agent_1 to create path from (2, 0, 0) to (2, 5, 0)
+5. rosrun multi_agent_planning test_agent_2 to create path from (0, 3, 0) to (6, 3, 0)
 
 ## Method:
 1. Build Map:
