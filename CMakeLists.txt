@@ -179,4 +179,18 @@ planner
 ${PROJECT_NAME}_generate_messages_cpp
 ${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-##add_dependencies(planner multi_agent_planning_gencpp)
+add_executable(test_agent_1
+  src/test_agent_1.cpp
+)
+add_dependencies(test_agent_1 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(test_agent_1
+  ${catkin_LIBRARIES}
+)
+
+add_executable(test_agent_2
+  src/test_agent_2.cpp
+)
+add_dependencies(test_agent_2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(test_agent_2
+  ${catkin_LIBRARIES}
+)
