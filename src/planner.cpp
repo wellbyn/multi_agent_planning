@@ -17,11 +17,11 @@ class Planner
 	public:
 		Planner();
 	private:
-		void timeCallback(const ros::TimerEvent& event);
+		void time_callback(const ros::TimerEvent& event);
 		void state_Callback(const geometry_msgs::Pose2D::ConstPtr& msg);
 		bool path_callback(multi_agent_planning::GetPlan::Request &req, multi_agent_planning::GetPlan::Response &res);
-		vector<Node::Ptr > reconstructPath(Node::Ptr start, Node::Ptr end, vector<vector<Node::Ptr>> came_from);
-		vector<vector<Node::Ptr>> findPath(Node::Ptr start, Node::Ptr end, vector<Node::Ptr> &map);
+		vector<Node::Ptr > reconstruct_path(Node::Ptr start, Node::Ptr end, vector<vector<Node::Ptr>> came_from);
+		vector<vector<Node::Ptr>> find_path(Node::Ptr start, Node::Ptr end, vector<Node::Ptr> &map);
 		double heuristic(Node::Ptr state, Node::Ptr end);
 		ros::NodeHandle nh_;
 		ros::Publisher pub_;
@@ -52,16 +52,14 @@ Planner::Planner()
 	sub_ = nh_.subscribe<geometry_msgs::Pose2D>("agent_feedback", 10, &Planner::state_Callback, this);
 	// wait for the goal
 	plan_service = nh_.advertiseService("get_plan", &Planner::path_callback, this);
-	timer = nh_.createTimer(ros::Duration(0.1), &Planner::timeCallback, this);
+	timer = nh_.createTimer(ros::Duration(0.1), &Planner::time_callback, this);
 	// map info
 	rm->buildMap();
 	map_size = rm->getSize();
-	map_x_size = rm->getXSize();
-	map_y_size = rm->getYSize();
 }
 
 
-void Planner::timeCallback(const ros::TimerEvent& event)
+void Planner::time_callback(const ros::TimerEvent& event)
 {
 	pub_.publish(final_path);
 }
@@ -95,8 +93,8 @@ bool Planner::path_callback(multi_agent_planning::GetPlan::Request &req,
 	end->y = goal.y;
 	end->yaw = goal.theta;
 
-	vector<vector<Node::Ptr>> came_from = findPath(start, end, rm->map_);
-	vector<Node::Ptr > node_path = reconstructPath(start, end, came_from);
+	vector<vector<Node::Ptr>> came_from = find_path(start, end, rm->map_);
+	vector<Node::Ptr > node_path = reconstruct_path(start, end, came_from);
 
 	// convert path to path message
 	final_path.poses = vector<geometry_msgs::PoseStamped>(node_path.size());
@@ -120,7 +118,7 @@ bool Planner::path_callback(multi_agent_planning::GetPlan::Request &req,
 }
 
 
-vector<Node::Ptr> Planner::reconstructPath(Node::Ptr start, Node::Ptr end, vector<vector<Node::Ptr>> came_from)
+vector<Node::Ptr> Planner::reconstruct_path(Node::Ptr start, Node::Ptr end, vector<vector<Node::Ptr>> came_from)
 {
 	vector<Node::Ptr> path;
 	path.push_back(end);
@@ -140,7 +138,7 @@ vector<Node::Ptr> Planner::reconstructPath(Node::Ptr start, Node::Ptr end, vecto
 }
 
 
-vector<vector<Node::Ptr>> Planner::findPath(Node::Ptr start, Node::Ptr end, vector<Node::Ptr> &map)
+vector<vector<Node::Ptr>> Planner::find_path(Node::Ptr start, Node::Ptr end, vector<Node::Ptr> &map)
 {
 	// Here use basic A* search , also can be used for higher dimention.
 	// define the path

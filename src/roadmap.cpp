@@ -8,18 +8,6 @@ vector<int> RoadMap::getSize()
 	return map_size;
 }
 
-vector<int> RoadMap::getXSize()
-{
-	vector<int> x_size = {m_};
-	return x_size;
-}
-
-vector<int> RoadMap::getYSize()
-{
-	vector<int> y_size = {n_};
-	return y_size;
-}
-
 void RoadMap::buildMap()
 {
 	// initial all the nodes in the map

@@ -13,7 +13,8 @@ class Agent
 		bool goal_callback(multi_agent_planning::UpdateGoal::Request &req, 
 						   multi_agent_planning::UpdateGoal::Response &res);
 
-		void timeCallback(const ros::TimerEvent& event);
+		void time_callback(const ros::TimerEvent& event);
+
 		ros::NodeHandle nh_;
 		ros::Publisher pub_;
 		ros::ServiceServer goal_;
@@ -23,19 +24,22 @@ class Agent
 		ros::Timer timer;
 };
 
+
 Agent::Agent()
 {
 	pub_ = nh_.advertise<geometry_msgs::Pose2D>("agent_feedback" , 1);
 	goal_ = nh_.advertiseService("update_goal", &Agent::goal_callback,this);
 	path_ = nh_.serviceClient<multi_agent_planning::GetPlan>("get_plan");
-	timer = nh_.createTimer(ros::Duration(0.1), &Agent::timeCallback, this);
+	timer = nh_.createTimer(ros::Duration(0.1), &Agent::time_callback, this);
 }
 
-void Agent::timeCallback(const ros::TimerEvent& event)
+
+void Agent::time_callback(const ros::TimerEvent& event)
 {
 	// publish the agent state
 	pub_.publish(state);
 }
+
 
 bool Agent::goal_callback(multi_agent_planning::UpdateGoal::Request &req, 
 						  multi_agent_planning::UpdateGoal::Response &res)
@@ -55,6 +59,7 @@ bool Agent::goal_callback(multi_agent_planning::UpdateGoal::Request &req,
 
 	return true;
 }
+
 
 int main(int argc, char **argv)
 {

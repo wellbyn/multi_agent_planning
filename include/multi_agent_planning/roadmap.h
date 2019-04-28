@@ -20,8 +20,6 @@ class RoadMap
         void buildMap();//build a map 
         vector<Node::Ptr> map_;
         vector<int> getSize(); // get the map shape
-        vector<int> getXSize(); // get the map x-aixe size
-        vector<int> getYSize(); // get the map y-aixe size
 
 	private:
 		int m_;
