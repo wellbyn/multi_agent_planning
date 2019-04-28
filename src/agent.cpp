@@ -44,20 +44,35 @@ void Agent::time_callback(const ros::TimerEvent& event)
 bool Agent::goal_callback(multi_agent_planning::UpdateGoal::Request &req, 
 						  multi_agent_planning::UpdateGoal::Response &res)
 {
-	state.x = req.start.x;
-	state.y = req.start.y;
-	state.theta = req.start.theta;
-    
-	//Update state position first
-	pub_.publish(state);
+    if("agent_1" == req.id)
+    {
+        state.x = 2.0;
+        state.y = 0.0;
+        state.theta = 0.0;
+    }
+    else if("agent_2" == req.id)
+    {
+        state.x = 0.0;
+        state.y = 3.0;
+        state.theta = 0.0;
+    }
+    else
+    {
+        state.x = 0.0;
+        state.y = 0.0;
+        state.theta = 0.0;
+    }
+
+    //Update state position first
+    pub_.publish(state);
 
     agent_path.request.id = req.id;
-	agent_path.request.goal.x = req.goal.x;
-	agent_path.request.goal.y = req.goal.y;
+    agent_path.request.goal.x = req.goal.x;
+    agent_path.request.goal.y = req.goal.y;
 
-	path_.call(agent_path);
+    path_.call(agent_path);
 
-	return true;
+    return true;
 }
 
 
